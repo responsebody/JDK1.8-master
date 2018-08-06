@@ -170,7 +170,7 @@ public class Vector<E>
      * OutOfMemoryError: Requested array size exceeds VM limit
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
-
+//  如果没有传入增长大小，默认增长一倍
     private void grow(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = elementData.length;
