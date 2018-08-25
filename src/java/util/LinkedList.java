@@ -61,13 +61,9 @@ public class LinkedList<E>
 // 默认add  添加到末尾
 
     void linkLast(E e) {
-//        记录最后一个的值
         final Node<E> l = last;
-        //放在当前最后一个之后
         final Node<E> newNode = new Node<>(l, e, null);
-        //记录新node为最后一个
         last = newNode;
-//        如果最后一个为空，是第一次添加，first和last都是添加的node
         if (l == null)
             first = newNode;
         else
