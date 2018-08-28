@@ -853,13 +853,16 @@ public abstract class AbstractQueuedSynchronizer
      * @param node the node
      * @param arg the acquire argument
      * @return {@code true} if interrupted while waiting
+	 * 是否加在头结点的后面，如果是那么他可以立即尝试一波tryAcquire
      */
     final boolean acquireQueued(final Node node, int arg) {
         boolean failed = true;
         try {
             boolean interrupted = false;
             for (;;) {
+            	//上一个节点
                 final Node p = node.predecessor();
+//                如果上一个是head，try
                 if (p == head && tryAcquire(arg)) {
                     setHead(node);
                     p.next = null; // help GC

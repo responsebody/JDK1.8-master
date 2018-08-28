@@ -123,10 +123,16 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         abstract void lock();
 
         /**
+		 * /**
+		 * 非公平锁实现
+		 * 1.判断当前是否有锁，如果没有，cas设置状态为1，设置当前锁占有者为当前线程 加锁成功
+		 * 2.当前线程是否已经获得锁，如果是状态+1 重入 加锁成功
+		 * 3.否则，失败
          * Performs non-fair tryLock.  tryAcquire is implemented in
          * subclasses, but both need nonfair try for trylock method.
          */
         final boolean nonfairTryAcquire(int acquires) {
+
             final Thread current = Thread.currentThread();
             int c = getState();
             if (c == 0) {
@@ -193,6 +199,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
     }
 
     /**
+	 * 非公平锁实现
+	 *
      * Sync object for non-fair locks
      */
     static final class NonfairSync extends Sync {
@@ -201,6 +209,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         /**
          * Performs lock.  Try immediate barge, backing up to normal
          * acquire on failure.
+		 * 直接尝试cas获取锁，如果获取成功，级state=0 当前没有锁，成功
+		 * 如果失败 acquire
          */
         final void lock() {
             if (compareAndSetState(0, 1))
