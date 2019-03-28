@@ -601,6 +601,7 @@ public abstract class AbstractQueuedSynchronizer
      *
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
      * @return the new node
+	 * 此方法用于将当前线程加入到等待队列的队尾，并返回当前线程所在的结点
      */
     private Node addWaiter(Node mode) {
         Node node = new Node(Thread.currentThread(), mode);
@@ -853,7 +854,7 @@ public abstract class AbstractQueuedSynchronizer
      * @param node the node
      * @param arg the acquire argument
      * @return {@code true} if interrupted while waiting
-	 * 是否加在头结点的后面，如果是那么他可以立即尝试一波tryAcquire
+	 * 是否加在头结点的后面，如果是那么他可以立即尝试tryAcquire
      */
     final boolean acquireQueued(final Node node, int arg) {
         boolean failed = true;
@@ -1180,6 +1181,8 @@ public abstract class AbstractQueuedSynchronizer
      * @return {@code true} if synchronization is held exclusively;
      *         {@code false} otherwise
      * @throws UnsupportedOperationException if conditions are not supported
+	 * AQS定义两种资源共享方式：Exclusive（独占，只有一个线程能执行，如ReentrantLock）和Share（
+	 * 共享，多个线程可同时执行，如Semaphore/CountDownLatch）
      */
     protected boolean isHeldExclusively() {
         throw new UnsupportedOperationException();
@@ -1195,7 +1198,11 @@ public abstract class AbstractQueuedSynchronizer
      *
      * @param arg the acquire argument.  This value is conveyed to
      *        {@link #tryAcquire} but is otherwise uninterpreted and
-     *        can represent anything you like.
+     *        can represent anything you like
+	 * tryAcquire()尝试直接去获取资源，如果成功则直接返回；
+	 * addWaiter()将该线程加入等待队列的尾部，并标记为独占模式；
+	 * acquireQueued()使线程在等待队列中获取资源，一直获取到资源后才返回。如果在整个等待过程中被中断过，则返回true，否则返回false。
+	 * 如果线程在等待过程中被中断过，它是不响应的。只是获取资源后才再进行自我中断selfInterrupt()，将中断补上。
      */
     public final void acquire(int arg) {
         if (!tryAcquire(arg) &&

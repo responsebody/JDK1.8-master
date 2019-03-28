@@ -505,6 +505,7 @@ public final class Method extends Executable {
      * method as defined by the Java Language Specification.
      * @since 1.5
      */
+//    桥接方法 https://www.jianshu.com/p/250030ea9b28
     public boolean isBridge() {
         return (getModifiers() & Modifier.BRIDGE) != 0;
     }
